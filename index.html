@@ -1,0 +1,1411 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#EDF3F7" id="theme-color-meta">
+  <title>MineRewards - Telegram Mini App</title>
+
+  <script>
+    (() => {
+      let theme = 'light';
+      try {
+        const savedTheme = localStorage.getItem('minerewards-theme');
+        if (savedTheme === 'light' || savedTheme === 'dark') theme = savedTheme;
+      } catch (error) {}
+      document.documentElement.dataset.theme = theme;
+    })();
+  </script>
+  
+  <!-- Telegram Web Apps SDK -->
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  
+  <!-- Inline SVG Favicon -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><circle cx='12' cy='12' r='10' fill='%23FFC928'/><text x='12' y='16' font-size='11' font-weight='900' text-anchor='middle' fill='%23101F2C'>MR</text></svg>">
+  
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Reusable SVG Asset Symbols -->
+  <svg style="display: none;">
+    <defs>
+      <!-- Mining Drill Machine Graphic for Levels (High-Fidelity Luminous Industrial Asset) -->
+      <g id="mining-drill-svg">
+        <!-- Soft Ground Shadow -->
+        <ellipse cx="40" cy="46" rx="34" ry="4" fill="#0D1B26" opacity="0.6" />
+        
+        <!-- Heavy Duty Caterpillar Track Assembly -->
+        <rect x="10" y="34" width="56" height="11" rx="5.5" fill="#142736" stroke="#355064" stroke-width="1.5" />
+        <!-- Track Tread Grip Segments -->
+        <path d="M14,34 L14,45 M20,34 L20,45 M26,34 L26,45 M32,34 L32,45 M38,34 L38,45 M44,34 L44,45 M50,34 L50,45 M56,34 L56,45 M62,34 L62,45" stroke="#0D1B26" stroke-width="1.2" />
+        <!-- Road Wheels with Golden Hubcaps -->
+        <circle cx="16" cy="39.5" r="3.5" fill="#243D4D" stroke="#FFC928" stroke-width="1" />
+        <circle cx="16" cy="39.5" r="1.5" fill="#FFC928" />
+        <circle cx="28" cy="39.5" r="3.5" fill="#243D4D" stroke="#FFC928" stroke-width="1" />
+        <circle cx="28" cy="39.5" r="1.5" fill="#FFC928" />
+        <circle cx="40" cy="39.5" r="3.5" fill="#243D4D" stroke="#FFC928" stroke-width="1" />
+        <circle cx="40" cy="39.5" r="1.5" fill="#FFC928" />
+        <circle cx="52" cy="39.5" r="3.5" fill="#243D4D" stroke="#FFC928" stroke-width="1" />
+        <circle cx="52" cy="39.5" r="1.5" fill="#FFC928" />
+        <circle cx="62" cy="39.5" r="3" fill="#243D4D" stroke="#355064" stroke-width="1" />
+
+        <!-- Main Body Chassis in Radiant Gold Gradient -->
+        <path d="M16,19 L48,19 L52,24 L52,34 L16,34 Z" fill="url(#drill-body-gold)" stroke="#D18B12" stroke-width="1.2" />
+        <!-- Upper Deck Armor Bevel -->
+        <polygon points="19,13 45,13 48,19 16,19" fill="#FFE77A" opacity="0.9" />
+        <!-- Engine Cooling Louvers -->
+        <line x1="20" y1="23" x2="20" y2="31" stroke="#78350F" stroke-width="1.6" stroke-linecap="round" />
+        <line x1="24" y1="23" x2="24" y2="31" stroke="#78350F" stroke-width="1.6" stroke-linecap="round" />
+        <line x1="28" y1="23" x2="28" y2="31" stroke="#78350F" stroke-width="1.6" stroke-linecap="round" />
+        
+        <!-- Operator Cockpit with Cyan Luminous Glass -->
+        <path d="M34,13 L47,13 L44,7 L36,7 Z" fill="#142B3A" stroke="#355064" stroke-width="1" />
+        <polygon points="36,8 43,8 45,12 35,12" fill="url(#drill-glass-cyan)" />
+        <line x1="39" y1="8" x2="37" y2="12" stroke="#FFFFFF" stroke-width="0.8" opacity="0.8" />
+        <!-- Warning Beacon -->
+        <circle cx="40" cy="5.5" r="1.5" fill="#9BEA27" />
+
+        <!-- Chrome Exhaust Stack -->
+        <rect x="18" y="6" width="3" height="8" rx="1" fill="#C1D0DC" stroke="#355064" stroke-width="0.8" />
+        <ellipse cx="19.5" cy="6" rx="1.5" ry="0.6" fill="#F8FCFF" />
+
+        <!-- Heavy Hydraulic Arm Extension -->
+        <rect x="48" y="21" width="7" height="11" rx="1.5" fill="#355064" stroke="#1A3040" stroke-width="1" />
+        <rect x="52" y="23" width="5" height="7" fill="#C1D0DC" />
+
+        <!-- Massive Conical Rotary Drill Bit -->
+        <polygon points="56,14 78,27 56,40" fill="url(#drill-bit-gold)" stroke="#D18B12" stroke-width="1.2" />
+        <!-- Metallic Spiral Flutes with White Highlights -->
+        <path d="M57,17 Q65,23 74,27" stroke="#FFFFFF" stroke-width="1.6" fill="none" opacity="0.9" />
+        <path d="M58,25 Q66,29 74,28" stroke="#78350F" stroke-width="1.6" fill="none" />
+        <path d="M57,36 Q65,31 74,28" stroke="#FFE77A" stroke-width="1.6" fill="none" opacity="0.9" />
+        <!-- Drill Core Sparkle & Impact Stars -->
+        <circle cx="78" cy="27" r="2" fill="#FFFFFF" />
+        <polygon points="78,24 79.5,27 82,27 80,28.5 81,31 78,29 75,31 76,28.5 74,27 76.5,27" fill="#FFE77A" />
+      </g>
+
+      <!-- Gradients for Drill Machine -->
+      <linearGradient id="drill-body-gold" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#FFE77A" />
+        <stop offset="45%" stop-color="#FFC928" />
+        <stop offset="100%" stop-color="#D18B12" />
+      </linearGradient>
+      <linearGradient id="drill-bit-gold" x1="0" y1="0" x2="1" y2="0">
+        <stop offset="0%" stop-color="#FFC928" />
+        <stop offset="60%" stop-color="#D18B12" />
+        <stop offset="100%" stop-color="#FFE77A" />
+      </linearGradient>
+      <linearGradient id="drill-glass-cyan" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0%" stop-color="#BEFF5C" stop-opacity="0.2" />
+        <stop offset="40%" stop-color="#22C8E5" />
+        <stop offset="100%" stop-color="#0E7490" />
+      </linearGradient>
+
+      <!-- Standard Gold Coin Gradient -->
+      <linearGradient id="coin-gold-grad" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0%" stop-color="#FFE77A" />
+        <stop offset="50%" stop-color="#FFC928" />
+        <stop offset="100%" stop-color="#D18B12" />
+      </linearGradient>
+    </defs>
+  </svg>
+
+  <!-- App Container -->
+  <div id="app" class="app-container">
+    
+    <!-- Top Bar / Unified User Status Card (Matching anhmau.png) -->
+    <header class="app-header">
+      <div class="user-profile-bar">
+        <!-- Circular Gold Medallion Logo -->
+        <div class="mr-avatar-medallion">
+          <div class="mr-avatar-ring">
+            <span class="mr-avatar-text">MR</span>
+          </div>
+        </div>
+
+        <!-- Center Brand & Level Info with XP progress -->
+        <div class="profile-meta-center">
+          <div class="profile-title-row">
+            <span class="profile-brand-name">MineRewards</span>
+            <span class="badge-level-chip" id="top-level-badge">LEVEL —</span>
+          </div>
+          <!-- XP Bar directly inside header card -->
+          <div class="profile-xp-row">
+            <div class="profile-xp-track">
+              <div class="profile-xp-fill" id="top-xp-bar" style="width: 0%;"></div>
+            </div>
+            <div class="profile-xp-labels">
+              <span class="xp-val-text" id="top-xp-text">Chưa đăng nhập</span>
+              <span class="xp-next-level" id="top-next-level-label">—</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Side: Gold Coin Pill -->
+        <div class="header-coin-pill" id="top-balance-display">
+          <svg class="coin-svg-icon" viewBox="0 0 24 24" fill="none">
+            <circle cx="12" cy="12" r="10" fill="url(#coin-gold-grad)"/>
+            <circle cx="12" cy="12" r="7" stroke="#FFE77A" stroke-width="1.5" fill="#FFC928"/>
+            <text x="12" y="15.5" font-size="9" font-weight="900" text-anchor="middle" fill="#78350f">XU</text>
+          </svg>
+          <span class="coin-number-text" id="top-coin-text">— Xu</span>
+        </div>
+
+        <button type="button" class="theme-toggle" id="theme-toggle" aria-label="Bật giao diện tối" aria-pressed="false" title="Chuyển giao diện">
+          <svg class="theme-icon theme-icon-sun" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+            <circle cx="12" cy="12" r="4"/>
+            <path d="M12 2.5v2.2M12 19.3v2.2M4.7 4.7l1.6 1.6m11.4 11.4 1.6 1.6M2.5 12h2.2m14.6 0h2.2M4.7 19.3l1.6-1.6M17.7 6.3l1.6-1.6"/>
+          </svg>
+          <svg class="theme-icon theme-icon-moon" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20.1 15.1A8.5 8.5 0 0 1 8.9 3.9 8.7 8.7 0 1 0 20.1 15.1Z"/>
+            <path d="m16.8 4.2.45 1.35 1.35.45-1.35.45-.45 1.35-.45-1.35-1.35-.45 1.35-.45.45-1.35Z"/>
+          </svg>
+        </button>
+      </div>
+    </header>
+
+    <!-- Main Content Area with 5 View Tabs -->
+    <main class="app-main" id="main-content">
+      <aside class="preview-notice" id="backend-status-banner" role="status" aria-live="polite">
+        <span class="preview-notice-dot" aria-hidden="true"></span>
+        <span id="backend-status-text">Đang kết nối máy chủ…</span>
+      </aside>
+      
+      <!-- ========================================== -->
+      <!-- TAB 1: MINING (MÁY ĐÀO XU)                  -->
+      <!-- ========================================== -->
+      <section id="tab-mining" class="tab-pane active" role="tabpanel" aria-labelledby="nav-btn-mining" aria-label="Khai thác mỏ">
+        
+        <!-- Cave Mining Interactive Canvas / High-Fidelity SVG -->
+        <div class="mining-hero-container">
+          <!-- Active State Badge (Matching anhmau.png top-right pill) -->
+          <div class="mining-state-badge" id="mining-status-pill">
+            <span class="status-indicator-dot pulsating"></span>
+            <span class="status-text" id="mining-state-label">ĐANG ĐÀO</span>
+          </div>
+
+          <div class="cave-scene" id="cave-scene">
+            <!-- Full Vector Graphic Cave with 4 Miners and Glowing Crystals -->
+            <svg class="cave-illustration-svg" viewBox="0 0 380 240" preserveAspectRatio="xMidYMid meet">
+              <defs>
+                <!-- Cavern Ambient Warm Glow Gradient (Bright Luminous Depth) -->
+                <radialGradient id="cavern-ambient" cx="50%" cy="58%" r="62%">
+                  <stop offset="0%" stop-color="#3d2d14" stop-opacity="0.85" />
+                  <stop offset="35%" stop-color="#1A3040" stop-opacity="0.95" />
+                  <stop offset="70%" stop-color="#142736" stop-opacity="1" />
+                  <stop offset="100%" stop-color="#0D1B26" stop-opacity="1" />
+                </radialGradient>
+                <!-- Central Golden Crystal Core Radiant Glow -->
+                <radialGradient id="gold-crystal-radiance" cx="50%" cy="50%" r="50%">
+                  <stop offset="0%" stop-color="#FFFDE7" stop-opacity="0.95" />
+                  <stop offset="30%" stop-color="#FFC928" stop-opacity="0.8" />
+                  <stop offset="65%" stop-color="#D18B12" stop-opacity="0.35" />
+                  <stop offset="100%" stop-color="#101F2C" stop-opacity="0" />
+                </radialGradient>
+                <!-- Hanging Lantern Light Cone -->
+                <radialGradient id="lantern-light-cone" cx="50%" cy="20%" r="80%">
+                  <stop offset="0%" stop-color="#FFFDE7" stop-opacity="0.95" />
+                  <stop offset="30%" stop-color="#FFC928" stop-opacity="0.55" />
+                  <stop offset="70%" stop-color="#D18B12" stop-opacity="0.2" />
+                  <stop offset="100%" stop-color="#101F2C" stop-opacity="0" />
+                </radialGradient>
+                <!-- 3D Crystal Shading Gradients -->
+                <linearGradient id="c-facet-1" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0%" stop-color="#FFFDE7" />
+                  <stop offset="30%" stop-color="#FFE77A" />
+                  <stop offset="100%" stop-color="#D18B12" />
+                </linearGradient>
+                <linearGradient id="c-facet-2" x1="1" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stop-color="#FEF08A" />
+                  <stop offset="60%" stop-color="#FFC928" />
+                  <stop offset="100%" stop-color="#92400E" />
+                </linearGradient>
+                <linearGradient id="c-facet-highlight" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stop-color="#FFFFFF" />
+                  <stop offset="50%" stop-color="#FFFDE7" />
+                  <stop offset="100%" stop-color="#FFE77A" />
+                </linearGradient>
+                <linearGradient id="c-facet-deep" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0%" stop-color="#FFC928" />
+                  <stop offset="50%" stop-color="#B45309" />
+                  <stop offset="100%" stop-color="#78350F" />
+                </linearGradient>
+                <!-- Cyan Luminous Base Crystals -->
+                <linearGradient id="cyan-crystal-grad" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0%" stop-color="#BEFF5C" stop-opacity="0.5" />
+                  <stop offset="30%" stop-color="#E0F7FA" />
+                  <stop offset="70%" stop-color="#22C8E5" />
+                  <stop offset="100%" stop-color="#0E7490" />
+                </linearGradient>
+                <!-- Wood Timber Scaffolding Gradients -->
+                <linearGradient id="wood-beam-vert" x1="0" y1="0" x2="1" y2="0">
+                  <stop offset="0%" stop-color="#5A2C0A" />
+                  <stop offset="30%" stop-color="#854D0E" />
+                  <stop offset="70%" stop-color="#A16207" />
+                  <stop offset="100%" stop-color="#451A03" />
+                </linearGradient>
+                <linearGradient id="wood-beam-horiz" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stop-color="#A16207" />
+                  <stop offset="40%" stop-color="#854D0E" />
+                  <stop offset="80%" stop-color="#5A2C0A" />
+                  <stop offset="100%" stop-color="#3D1D06" />
+                </linearGradient>
+              </defs>
+
+              <!-- Cavern Backdrop with Ambient Glow -->
+              <rect x="0" y="0" width="380" height="240" fill="url(#cavern-ambient)" />
+
+              <!-- Vault Arch & Stalactite Ceilings (With Warm Rim Highlights) -->
+              <path d="M0,0 L380,0 L380,40 Q350,25 325,44 Q295,20 265,46 Q235,16 205,38 Q175,14 145,42 Q115,20 85,46 Q55,20 25,38 Q10,24 0,36 Z" fill="#142736" />
+              <path d="M0,0 L380,0 L380,24 Q335,12 295,28 Q255,10 215,26 Q175,8 135,25 Q95,10 50,25 Q20,12 0,20 Z" fill="#1A3040" />
+              <!-- Amber Rim Lighting on Ceiling Edges -->
+              <path d="M25,38 Q55,20 85,46 Q115,20 145,42 Q175,14 205,38 Q235,16 265,46 Q295,20 325,44" stroke="#FFE77A" stroke-width="1.2" fill="none" opacity="0.45" />
+
+              <!-- Heavy Timber Mine Scaffolding Arch -->
+              <!-- Left Vertical Timber Post -->
+              <rect x="20" y="0" width="18" height="240" fill="url(#wood-beam-vert)" stroke="#3D1D06" stroke-width="1.5" />
+              <!-- Right Vertical Timber Post -->
+              <rect x="342" y="0" width="18" height="240" fill="url(#wood-beam-vert)" stroke="#3D1D06" stroke-width="1.5" />
+              <!-- Top Horizontal Timber Header Beam -->
+              <rect x="12" y="14" width="356" height="18" rx="2" fill="url(#wood-beam-horiz)" stroke="#3D1D06" stroke-width="1.5" />
+              <!-- Timber Planks Woodgrain Lines -->
+              <line x1="29" y1="32" x2="29" y2="240" stroke="#FFE77A" stroke-width="0.8" opacity="0.25" />
+              <line x1="351" y1="32" x2="351" y2="240" stroke="#FFE77A" stroke-width="0.8" opacity="0.25" />
+              <line x1="12" y1="23" x2="368" y2="23" stroke="#FFE77A" stroke-width="0.8" opacity="0.3" />
+
+              <!-- Diagonal Corner Braces with Iron Fasteners -->
+              <polygon points="38,32 68,32 38,62" fill="#78350F" stroke="#3D1D06" stroke-width="1" />
+              <circle cx="46" cy="40" r="2" fill="#142736" stroke="#9BAFBE" stroke-width="0.6" />
+              <polygon points="342,32 312,32 342,62" fill="#78350F" stroke="#3D1D06" stroke-width="1" />
+              <circle cx="334" cy="40" r="2" fill="#142736" stroke="#9BAFBE" stroke-width="0.6" />
+
+              <!-- Hanging Mining Lanterns with Radiant Light Cones -->
+              <!-- Left Lantern Rig -->
+              <g class="lantern-rig-left">
+                <line x1="64" y1="32" x2="64" y2="56" stroke="#64748B" stroke-width="1.5" />
+                <ellipse cx="64" cy="88" rx="46" ry="58" fill="url(#lantern-light-cone)" />
+                <!-- Lantern Brass Frame -->
+                <rect x="56" y="56" width="16" height="22" rx="3" fill="#1E293B" stroke="#D18B12" stroke-width="1.5" />
+                <rect x="59" y="60" width="10" height="14" rx="1.5" fill="#FFE77A" class="lantern-flicker-flame" />
+                <!-- Lantern Cap & Loop -->
+                <polygon points="54,56 74,56 64,49" fill="#78350F" stroke="#D18B12" stroke-width="1" />
+                <circle cx="64" cy="48" r="2" fill="none" stroke="#D18B12" stroke-width="1.2" />
+              </g>
+
+              <!-- Right Lantern Rig -->
+              <g class="lantern-rig-right">
+                <line x1="316" y1="32" x2="316" y2="56" stroke="#64748B" stroke-width="1.5" />
+                <ellipse cx="316" cy="88" rx="46" ry="58" fill="url(#lantern-light-cone)" />
+                <!-- Lantern Brass Frame -->
+                <rect x="308" y="56" width="16" height="22" rx="3" fill="#1E293B" stroke="#D18B12" stroke-width="1.5" />
+                <rect x="311" y="60" width="10" height="14" rx="1.5" fill="#FFE77A" class="lantern-flicker-flame" />
+                <polygon points="306,56 326,56 316,49" fill="#78350F" stroke="#D18B12" stroke-width="1" />
+                <circle cx="316" cy="48" r="2" fill="none" stroke="#D18B12" stroke-width="1.2" />
+              </g>
+
+              <!-- Layered Rocky Cavern Floor -->
+              <path d="M0,205 Q95,188 190,192 Q285,188 380,205 L380,240 L0,240 Z" fill="#142736" />
+              <path d="M20,214 Q100,198 190,202 Q280,198 360,214 L360,240 L20,240 Z" fill="#1A3040" />
+              <ellipse cx="190" cy="205" rx="88" ry="16" fill="#243D4D" />
+              <!-- Floor Amber Rim Highlight -->
+              <path d="M40,212 Q100,198 190,202 Q280,198 340,212" stroke="#FFE77A" stroke-width="1" fill="none" opacity="0.5" />
+
+              <!-- Ambient Central Gold Glow Aura (Warm Radiant Halo) -->
+              <circle cx="190" cy="132" r="95" fill="url(#gold-crystal-radiance)" class="ambient-crystal-radiance" />
+
+              <!-- Luminous Cyan Accent Crystal Clusters at Cave Base -->
+              <g class="cyan-clusters-left">
+                <polygon points="112,208 120,166 132,210" fill="url(#cyan-crystal-grad)" />
+                <polygon points="126,210 134,180 144,212" fill="url(#cyan-crystal-grad)" opacity="0.85" />
+                <polygon points="102,212 110,186 118,214" fill="url(#cyan-crystal-grad)" opacity="0.8" />
+                <line x1="120" y1="166" x2="124" y2="209" stroke="#FFFFFF" stroke-width="1" opacity="0.9" />
+              </g>
+              <g class="cyan-clusters-right">
+                <polygon points="248,210 260,168 268,208" fill="url(#cyan-crystal-grad)" />
+                <polygon points="236,212 246,182 254,210" fill="url(#cyan-crystal-grad)" opacity="0.85" />
+                <polygon points="262,214 270,186 278,212" fill="url(#cyan-crystal-grad)" opacity="0.8" />
+                <line x1="260" y1="168" x2="256" y2="209" stroke="#FFFFFF" stroke-width="1" opacity="0.9" />
+              </g>
+
+              <!-- Central Giant Faceted Golden Crystal Cluster (Towering Luminous Obelisk) -->
+              <g class="central-gold-crystal" id="gold-crystal-group">
+                <!-- Base Rock Foundation Shards -->
+                <polygon points="132,206 148,188 164,206" fill="url(#c-facet-deep)" />
+                <polygon points="216,206 232,188 248,206" fill="url(#c-facet-deep)" />
+
+                <!-- Outer Left Spire (Apex at 144, 98) -->
+                <polygon points="144,98 162,138 154,204 136,202 130,146" fill="url(#c-facet-1)" />
+                <polygon points="144,98 130,146 136,202 144,202" fill="url(#c-facet-2)" />
+                <polygon points="144,98 162,138 154,204" fill="url(#c-facet-highlight)" opacity="0.4" />
+                
+                <!-- Outer Right Spire (Apex at 236, 100) -->
+                <polygon points="236,100 250,146 244,204 226,202 218,140" fill="url(#c-facet-1)" />
+                <polygon points="236,100 218,140 226,202 236,202" fill="url(#c-facet-2)" />
+                <polygon points="236,100 250,146 244,204" fill="url(#c-facet-deep)" opacity="0.6" />
+
+                <!-- Mid Left Spire (Apex at 162, 66) -->
+                <polygon points="162,66 180,120 172,206 152,204 146,124" fill="url(#c-facet-1)" />
+                <polygon points="162,66 146,124 152,204 162,204" fill="url(#c-facet-2)" />
+                <line x1="162" y1="66" x2="162" y2="204" stroke="#FFFFFF" stroke-width="1.2" opacity="0.7" />
+
+                <!-- Mid Right Spire (Apex at 218, 68) -->
+                <polygon points="218,68 234,126 228,206 208,204 200,120" fill="url(#c-facet-1)" />
+                <polygon points="218,68 200,120 208,204 218,204" fill="url(#c-facet-2)" />
+                <line x1="218" y1="68" x2="218" y2="204" stroke="#FFE77A" stroke-width="1.2" opacity="0.7" />
+
+                <!-- Grand Central Towering Crystal Spire (Apex at 190, 34) -->
+                <polygon points="190,34 212,98 204,208 176,208 168,98" fill="url(#c-facet-1)" />
+                <polygon points="190,34 168,98 176,208 190,208" fill="url(#c-facet-2)" />
+                <!-- Faceted Specular Light Beam on Central Spire -->
+                <polygon points="190,34 212,98 190,208" fill="url(#c-facet-highlight)" opacity="0.75" />
+                <!-- Center Diamond Crystal Core Glint -->
+                <polygon points="190,68 200,110 190,152 180,110" fill="#FFFFFF" opacity="0.95" class="diamond-crystal-core" />
+                <line x1="190" y1="34" x2="190" y2="208" stroke="#FFFFFF" stroke-width="1.5" />
+              </g>
+
+              <!-- ============================================================== -->
+              <!-- 4 DETAILED DWARF MINERS (CHUNKY, EXPRESSIVE, HIGH FIDELITY)    -->
+              <!-- ============================================================== -->
+
+              <!-- DWARF MINER 1: Far Left (Blue Denim Dungarees, Overhead Swing) -->
+              <g class="miner-char worker-1-rig" transform="translate(56, 132)">
+                <!-- Soft Character Shadow -->
+                <ellipse cx="16" cy="50" rx="16" ry="4.5" fill="#0D1B26" opacity="0.6" />
+                <!-- Sturdy Boots -->
+                <g class="worker-legs worker-1-legs">
+                <path d="M7,32 L6,48 L1,50 L14,50 L12,32 Z" fill="#3D1D06" stroke="#1A0C05" stroke-width="1" />
+                <path d="M16,32 L17,48 L13,50 L25,50 L23,32 Z" fill="#2A1409" stroke="#1A0C05" stroke-width="1" />
+                </g>
+                <g class="worker-upper-body worker-1-upper">
+                <!-- Denim Dungarees & Body -->
+                <rect x="6" y="16" width="18" height="18" rx="4" fill="#0284C7" stroke="#0369A1" stroke-width="1.2" />
+                <!-- Leather Suspenders & Brass Buckles -->
+                <line x1="10" y1="16" x2="10" y2="34" stroke="#78350F" stroke-width="2" />
+                <circle cx="10" cy="20" r="1.5" fill="#FFC928" />
+                <line x1="20" y1="16" x2="20" y2="34" stroke="#78350F" stroke-width="2" />
+                <circle cx="20" cy="20" r="1.5" fill="#FFC928" />
+                <!-- Dwarf Head & Bushy Beard -->
+                <circle cx="15" cy="10" r="8" fill="#FED7AA" />
+                <path d="M9,12 Q15,22 21,12 Q18,8 15,9 Q12,8 9,12 Z" fill="#78350F" />
+                <ellipse cx="15" cy="10" rx="2.5" ry="1.8" fill="#FDBA74" />
+                <!-- Yellow Hard Hat with Brim -->
+                <path d="M6,8 Q15,0 24,8 L25,12 L5,12 Z" fill="#FFC928" stroke="#D18B12" stroke-width="1.2" />
+                <rect x="4" y="10" width="22" height="2.5" rx="1" fill="#FFE77A" />
+                <!-- Mounted Headlamp Casting Beam -->
+                <rect x="19" y="5" width="5" height="5" rx="1.5" fill="#FFFFFF" stroke="#D18B12" stroke-width="0.8" />
+                <polygon points="24,5 44,1 44,14 24,10" fill="#FFFDE7" opacity="0.4" />
+                <!-- Swinging Pickaxe Rig -->
+                <g class="worker-arm-swing w1-arm">
+                  <rect x="14" y="15" width="16" height="6" rx="2.5" fill="#0284C7" transform="rotate(-35 14 15)" />
+                  <circle cx="26" cy="8" r="3.5" fill="#FED7AA" />
+                  <!-- Wooden Pickaxe with Curved Forged Steel Head -->
+                  <g transform="translate(26, 8) rotate(22)">
+                    <rect x="-2.5" y="-22" width="4" height="38" rx="1.8" fill="#854D0E" stroke="#5A2C0A" stroke-width="0.8" />
+                    <path d="M-13,-22 Q-1,-28 11,-22 L9,-18 Q-1,-23 -11,-18 Z" fill="#C1D0DC" stroke="#475569" stroke-width="1" />
+                    <!-- Steel Tip Specular Glint -->
+                    <circle cx="11" cy="-22" r="1.2" fill="#FFFFFF" />
+                  </g>
+                </g>
+                </g>
+              </g>
+
+              <!-- DWARF MINER 2: Near Left (High-Vis Orange Safety Vest, Lunging Strike at Base) -->
+              <g class="miner-char worker-2-rig" transform="translate(102, 138)">
+                <ellipse cx="18" cy="52" rx="18" ry="5" fill="#0D1B26" opacity="0.65" />
+                <!-- Lunging Legs & Boots -->
+                <g class="worker-legs worker-2-legs">
+                <path d="M6,34 L1,50 L-6,52 L8,52 L11,34 Z" fill="#355064" stroke="#1A3040" stroke-width="1" />
+                <path d="M18,34 L25,50 L20,52 L32,52 L27,34 Z" fill="#243D4D" stroke="#1A3040" stroke-width="1" />
+                </g>
+                <g class="worker-upper-body worker-2-upper">
+                <!-- Torso with High-Vis Orange Safety Vest -->
+                <g class="worker-torso w2-torso">
+                  <rect x="8" y="17" width="20" height="19" rx="4" fill="#EA580C" stroke="#C2410C" stroke-width="1.2" />
+                  <!-- Silver-White Reflective Safety Stripes -->
+                  <rect x="8" y="23" width="20" height="3.5" fill="#F8FCFF" />
+                  <rect x="8" y="29" width="20" height="2" fill="#F8FCFF" opacity="0.8" />
+                  <!-- Head & Miner Hat -->
+                  <circle cx="18" cy="11" r="8.5" fill="#FED7AA" />
+                  <path d="M11,13 Q18,24 25,13 Q21,9 18,10 Q15,9 11,13 Z" fill="#5A2C0A" />
+                  <ellipse cx="18" cy="11" rx="2.5" ry="1.8" fill="#FDBA74" />
+                  <path d="M9,9 Q18,1 27,9 L28,13 L8,13 Z" fill="#FFC928" stroke="#D18B12" stroke-width="1.2" />
+                  <rect x="7" y="11" width="22" height="2.5" rx="1" fill="#FFE77A" />
+                  <rect x="22" y="6" width="5" height="5" rx="1.5" fill="#FFFFFF" stroke="#D18B12" stroke-width="0.8" />
+                  <polygon points="27,6 50,3 50,18 27,11" fill="#FFFDE7" opacity="0.45" />
+                </g>
+                <!-- Heavy Pickaxe Strike Rig -->
+                <g class="worker-arm-swing w2-arm">
+                  <rect x="15" y="18" width="16" height="6" rx="2.5" fill="#EA580C" transform="rotate(-42 15 18)" />
+                  <circle cx="27" cy="9" r="3.5" fill="#FED7AA" />
+                  <g transform="translate(27, 9) rotate(38)">
+                    <rect x="-2.5" y="-24" width="4.5" height="42" rx="2" fill="#854D0E" stroke="#5A2C0A" stroke-width="0.8" />
+                    <path d="M-15,-24 Q-1,-31 13,-24 L11,-20 Q-1,-26 -13,-20 Z" fill="#E2E8F0" stroke="#64748B" stroke-width="1" />
+                    <circle cx="13" cy="-24" r="1.5" fill="#FFFFFF" />
+                  </g>
+                </g>
+                </g>
+              </g>
+
+              <!-- DWARF MINER 3: Near Right (Facing Left, Powerful Downward Strike) -->
+              <g class="miner-char worker-3-rig" transform="translate(270, 138) scale(-1, 1)">
+                <ellipse cx="18" cy="52" rx="18" ry="5" fill="#0D1B26" opacity="0.65" />
+                <!-- Legs -->
+                <g class="worker-legs worker-3-legs">
+                <path d="M6,34 L1,50 L-6,52 L8,52 L11,34 Z" fill="#355064" stroke="#1A3040" stroke-width="1" />
+                <path d="M18,34 L25,50 L20,52 L32,52 L27,34 Z" fill="#243D4D" stroke="#1A3040" stroke-width="1" />
+                </g>
+                <g class="worker-upper-body worker-3-upper">
+                <!-- Torso & Orange Shirt -->
+                <g class="worker-torso w3-torso">
+                  <rect x="8" y="17" width="20" height="19" rx="4" fill="#EA580C" stroke="#C2410C" stroke-width="1.2" />
+                  <rect x="8" y="23" width="20" height="3.5" fill="#F8FCFF" />
+                  <circle cx="18" cy="11" r="8.5" fill="#FED7AA" />
+                  <path d="M11,13 Q18,24 25,13 Q21,9 18,10 Q15,9 11,13 Z" fill="#5A2C0A" />
+                  <ellipse cx="18" cy="11" rx="2.5" ry="1.8" fill="#FDBA74" />
+                  <path d="M9,9 Q18,1 27,9 L28,13 L8,13 Z" fill="#FFC928" stroke="#D18B12" stroke-width="1.2" />
+                  <rect x="7" y="11" width="22" height="2.5" rx="1" fill="#FFE77A" />
+                  <rect x="22" y="6" width="5" height="5" rx="1.5" fill="#FFFFFF" stroke="#D18B12" stroke-width="0.8" />
+                  <polygon points="27,6 50,3 50,18 27,11" fill="#FFFDE7" opacity="0.45" />
+                </g>
+                <!-- Pickaxe Swing -->
+                <g class="worker-arm-swing w3-arm">
+                  <rect x="15" y="18" width="16" height="6" rx="2.5" fill="#EA580C" transform="rotate(-38 15 18)" />
+                  <circle cx="27" cy="9" r="3.5" fill="#FED7AA" />
+                  <g transform="translate(27, 9) rotate(32)">
+                    <rect x="-2.5" y="-24" width="4.5" height="42" rx="2" fill="#854D0E" stroke="#5A2C0A" stroke-width="0.8" />
+                    <path d="M-15,-24 Q-1,-31 13,-24 L11,-20 Q-1,-26 -13,-20 Z" fill="#E2E8F0" stroke="#64748B" stroke-width="1" />
+                    <circle cx="13" cy="-24" r="1.5" fill="#FFFFFF" />
+                  </g>
+                </g>
+                </g>
+              </g>
+
+              <!-- DWARF MINER 4: Far Right (Facing Left, Green Miner Shirt, High Arc Swing) -->
+              <g class="miner-char worker-4-rig" transform="translate(316, 132) scale(-1, 1)">
+                <ellipse cx="16" cy="50" rx="16" ry="4.5" fill="#0D1B26" opacity="0.6" />
+                <g class="worker-legs worker-4-legs">
+                <path d="M7,32 L6,48 L1,50 L14,50 L12,32 Z" fill="#3D1D06" stroke="#1A0C05" stroke-width="1" />
+                <path d="M16,32 L17,48 L13,50 L25,50 L23,32 Z" fill="#2A1409" stroke="#1A0C05" stroke-width="1" />
+                </g>
+                <g class="worker-upper-body worker-4-upper">
+                <!-- Green Flannel Miner Workshirt -->
+                <rect x="6" y="16" width="18" height="18" rx="4" fill="#16A34A" stroke="#15803D" stroke-width="1.2" />
+                <line x1="10" y1="16" x2="10" y2="34" stroke="#1A3040" stroke-width="1.8" />
+                <line x1="20" y1="16" x2="20" y2="34" stroke="#1A3040" stroke-width="1.8" />
+                <circle cx="15" cy="10" r="8" fill="#FED7AA" />
+                <path d="M9,12 Q15,22 21,12 Q18,8 15,9 Q12,8 9,12 Z" fill="#78350F" />
+                <!-- Red & Yellow Hard Hat for Visual Variety -->
+                <path d="M6,8 Q15,0 24,8 L25,12 L5,12 Z" fill="#EF4444" stroke="#B91C1C" stroke-width="1.2" />
+                <rect x="4" y="10" width="22" height="2.5" rx="1" fill="#FCA5A5" />
+                <rect x="19" y="5" width="5" height="5" rx="1.5" fill="#FFFFFF" />
+                <polygon points="24,5 44,1 44,14 24,10" fill="#FFFDE7" opacity="0.4" />
+                <!-- Arm Swing -->
+                <g class="worker-arm-swing w4-arm">
+                  <rect x="14" y="15" width="16" height="6" rx="2.5" fill="#16A34A" transform="rotate(-48 14 15)" />
+                  <circle cx="26" cy="8" r="3.5" fill="#FED7AA" />
+                  <g transform="translate(26, 8) rotate(16)">
+                    <rect x="-2.5" y="-22" width="4" height="38" rx="1.8" fill="#854D0E" stroke="#5A2C0A" stroke-width="0.8" />
+                    <path d="M-13,-22 Q-1,-28 11,-22 L9,-18 Q-1,-23 -11,-18 Z" fill="#C1D0DC" stroke="#475569" stroke-width="1" />
+                    <circle cx="11" cy="-22" r="1.2" fill="#FFFFFF" />
+                  </g>
+                </g>
+                </g>
+              </g>
+
+              <g class="sparks-layer" id="mining-sparks" aria-hidden="true">
+                <g class="impact-burst worker-1-impact" transform="translate(87 174)">
+                  <circle class="impact-halo" r="10" fill="#FFC928"/>
+                  <path class="impact-star" d="M0-7 2-2 7 0 2 2 0 7-2 2-7 0-2-2Z" fill="#FFF4BC"/>
+                  <path class="impact-rays" d="M-10-3 -14-7M8-5 12-9M1 10 2 15" fill="none" stroke="#FFE18A" stroke-width="1.8" stroke-linecap="round"/>
+                </g>
+                <g class="impact-burst worker-2-impact" transform="translate(146 178)">
+                  <circle class="impact-halo" r="10" fill="#FFC928"/>
+                  <path class="impact-star" d="M0-7 2-2 7 0 2 2 0 7-2 2-7 0-2-2Z" fill="#FFF4BC"/>
+                  <path class="impact-rays" d="M-10-3 -14-7M8-5 12-9M1 10 2 15" fill="none" stroke="#FFE18A" stroke-width="1.8" stroke-linecap="round"/>
+                </g>
+                <g class="impact-burst worker-3-impact" transform="translate(234 178)">
+                  <circle class="impact-halo" r="10" fill="#FFC928"/>
+                  <path class="impact-star" d="M0-7 2-2 7 0 2 2 0 7-2 2-7 0-2-2Z" fill="#FFF4BC"/>
+                  <path class="impact-rays" d="M-10-3 -14-7M8-5 12-9M1 10 2 15" fill="none" stroke="#FFE18A" stroke-width="1.8" stroke-linecap="round"/>
+                </g>
+                <g class="impact-burst worker-4-impact" transform="translate(293 174)">
+                  <circle class="impact-halo" r="10" fill="#FFC928"/>
+                  <path class="impact-star" d="M0-7 2-2 7 0 2 2 0 7-2 2-7 0-2-2Z" fill="#FFF4BC"/>
+                  <path class="impact-rays" d="M-10-3 -14-7M8-5 12-9M1 10 2 15" fill="none" stroke="#FFE18A" stroke-width="1.8" stroke-linecap="round"/>
+                </g>
+              </g>
+            </svg>
+
+            <!-- Ambient Floating Mining Dust Particles -->
+            <div class="cave-dust-particles" aria-hidden="true">
+              <span class="dust-particle d1"></span>
+              <span class="dust-particle d2"></span>
+              <span class="dust-particle d3"></span>
+              <span class="dust-particle d4"></span>
+              <span class="dust-particle d5"></span>
+              <span class="dust-particle d6"></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Mining Control Card (Matching anhmau.png) -->
+        <div class="card mining-control-card">
+          <div class="mining-card-header">
+            <div class="header-tag">
+              <svg class="tag-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <path d="M14 2l4 4L7 17H3v-4L14 2z"/>
+                <path d="M3 22l6-6"/>
+                <path d="M21 9l-6-6"/>
+              </svg>
+              <span>MÁY ĐÀO XU</span>
+            </div>
+            
+            <div class="speed-tag">
+              <svg class="speed-icon" viewBox="0 0 24 24" fill="currentColor">
+                <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+              </svg>
+                <span id="mining-speed-display">— Xu/giờ</span>
+            </div>
+          </div>
+
+          <!-- Yield Display (Gold Coin + Big Bold Value) -->
+          <div class="mining-yield-display">
+            <div class="yield-coin-icon">
+              <svg viewBox="0 0 44 44" fill="none">
+                <circle cx="22" cy="22" r="20" fill="url(#coin-gold-grad)"/>
+                <circle cx="22" cy="22" r="16" stroke="#FFE77A" stroke-width="1.8" fill="#FFC928"/>
+                <text x="22" y="28" text-anchor="middle" font-size="16" font-weight="900" fill="#78350f">XU</text>
+              </svg>
+            </div>
+            <div class="yield-text-group">
+              <div class="yield-amount gold-highlight" id="session-yield-amount">280 Xu</div>
+              <div class="yield-sub">Phần thưởng phiên 4 giờ</div>
+            </div>
+          </div>
+
+          <!-- Progress Bar & Countdown (Exact anhmau.png styling) -->
+          <div class="mining-progress-section">
+            <div class="progress-track">
+            <div class="progress-fill neon-lime" id="mining-progress-fill" style="width: 0%;"></div>
+            </div>
+            <div class="progress-meta">
+              <span class="countdown-label">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="meta-icon">
+                  <circle cx="12" cy="12" r="10"/>
+                  <polyline points="12 6 12 12 16 14"/>
+                </svg>
+                <span id="mining-countdown-text">Chưa đăng nhập</span>
+              </span>
+            </div>
+          </div>
+
+          <!-- Primary Action Button (Kích hoạt / Đang đào / Nhận Xu) -->
+          <button type="button" class="btn btn-mining-action idle-state" id="btn-mining-action" disabled>
+            <span class="btn-icon" id="mining-btn-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <circle cx="12" cy="12" r="3"/>
+                <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+              </svg>
+            </span>
+            <span class="btn-text" id="mining-btn-text">KẾT NỐI ĐỂ BẮT ĐẦU</span>
+          </button>
+        </div>
+
+        <!-- 2x2 Parameters Grid (Exact anhmau.png structure: 2 cols x 2 rows) -->
+        <div class="stats-grid-2x2">
+          <div class="stat-cell">
+            <span class="cell-label">LEVEL</span>
+            <span class="cell-value" id="summary-level-val">—</span>
+          </div>
+          <div class="stat-cell">
+            <span class="cell-label">THỜI GIAN PHIÊN</span>
+            <span class="cell-value">4 Giờ</span>
+          </div>
+          <div class="stat-cell">
+            <span class="cell-label">XU / PHIÊN</span>
+            <span class="cell-value gold-highlight" id="summary-yield-val">— Xu</span>
+          </div>
+          <div class="stat-cell">
+            <span class="cell-label">TRẠNG THÁI</span>
+            <span class="cell-value status-cell-val" id="summary-status-val">
+              <span class="dot-indicator green"></span>
+              <span>Đang đào</span>
+            </span>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- ========================================== -->
+      <!-- TAB 2: UPGRADE (NÂNG CẤP)                   -->
+      <!-- ========================================== -->
+      <section id="tab-upgrade" class="tab-pane" role="tabpanel" aria-labelledby="nav-btn-upgrade" aria-label="Nâng cấp máy đào">
+
+        <div class="card level-xp-card" id="level-xp-card" aria-label="Level và tiến trình XP hiện tại">
+          <div class="level-xp-overview">
+            <div class="level-xp-badge">
+              <span class="level-xp-label">LEVEL</span>
+              <strong class="level-xp-number" id="dock-level-num">—</strong>
+            </div>
+            <div class="level-xp-mining-stats">
+              <div class="dock-rate" id="dock-speed-text">— Xu/giờ</div>
+              <div class="dock-session" id="dock-session-text">— Xu / phiên 4 giờ</div>
+            </div>
+          </div>
+          <div class="level-xp-progress">
+            <div class="level-xp-progress-heading">
+              <span class="xp-title">Tiến trình XP</span>
+              <strong class="xp-numbers" id="dock-xp-text">Chưa đăng nhập</strong>
+            </div>
+            <div class="dock-xp-bar" role="progressbar" aria-label="Tiến trình XP" aria-valuemin="0" aria-valuemax="100" aria-valuenow="64">
+            <div class="dock-xp-fill" id="dock-xp-fill" style="width: 0%;"></div>
+            </div>
+            <div class="dock-xp-percent" id="dock-xp-percent">—</div>
+          </div>
+        </div>
+
+        <!-- Rewarded Ads: clearly unavailable until AdsGram is connected -->
+        <div class="card card-ads-reward" id="ads-card">
+          <div class="ads-card-left">
+            <div class="ads-icon-box">
+              <svg viewBox="0 0 24 24" fill="currentColor">
+                <path d="M8 5v14l11-7z"/>
+              </svg>
+            </div>
+            <div class="ads-info">
+              <h2 class="ads-title">XEM QUẢNG CÁO NHẬN EXP</h2>
+              <div class="ads-sub">
+                <span class="exp-badge">+2 XP / lượt</span>
+                <span class="ads-count" id="ads-daily-count">Đang tắt</span>
+              </div>
+            </div>
+          </div>
+          <button type="button" class="btn-ads-cta" id="btn-watch-ad" aria-describedby="ads-status" disabled>
+            <svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor">
+              <path d="M8 5.8c0-.78.86-1.26 1.53-.85l10.02 6.2a1 1 0 0 1 0 1.7l-10.02 6.2A1 1 0 0 1 8 18.2V5.8Z"/>
+            </svg>
+            <span>XEM QUẢNG CÁO – NHẬN +2 XP</span>
+          </button>
+          <p class="ads-status" id="ads-status">AdsGram chưa được tích hợp · XP chưa khả dụng</p>
+        </div>
+
+        <!-- Section Header & Status Legend -->
+        <div class="section-title-bar">
+          <div class="title-with-icon">
+            <div class="gold-crown-icon">
+              <svg viewBox="0 0 24 24" fill="#FFC928">
+                <path d="M5 16L3 5l5.5 5L12 4l3.5 6L21 5l-2 11H5zm14 3c0 .6-.4 1-1 1H6c-.6 0-1-.4-1-1v-1h14v1z"/>
+              </svg>
+            </div>
+            <div>
+              <h2 class="section-heading">NÂNG CẤP MÁY ĐÀO</h2>
+              <div class="section-subtext">Khám phá 30 cấp độ</div>
+            </div>
+          </div>
+
+          <!-- Status Legend -->
+          <div class="status-legend">
+            <span class="legend-item"><span class="legend-icon done">✓</span> Đã đạt</span>
+            <span class="legend-item"><span class="legend-badge active">ACTIVE</span> Đang dùng</span>
+            <span class="legend-item"><span class="legend-icon locked">🔒</span> Chưa đạt</span>
+          </div>
+        </div>
+
+        <!-- 30-Level 2-Column Grid (Populated dynamically by app.js) -->
+        <div class="levels-grid" id="levels-grid-container"></div>
+
+      </section>
+
+      <!-- ========================================== -->
+      <!-- TAB 3: CHECK-IN (ĐIỂM DANH)                 -->
+      <!-- ========================================== -->
+      <section id="tab-checkin" class="tab-pane" role="tabpanel" aria-labelledby="nav-btn-checkin" aria-label="Điểm danh và nhiệm vụ">
+        
+        <!-- Daily Check-in Card (Matching anhmau.png) -->
+        <div class="card checkin-hero-card">
+          <div class="checkin-header">
+            <div class="checkin-title-group">
+              <div class="calendar-hero-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#FFC928" stroke-width="2">
+                  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                  <line x1="16" y1="2" x2="16" y2="6"/>
+                  <line x1="8" y1="2" x2="8" y2="6"/>
+                  <line x1="3" y1="10" x2="21" y2="10"/>
+                  <path d="M9 16l2 2 4-4"/>
+                </svg>
+              </div>
+              <div>
+                <h2 class="card-heading">ĐIỂM DANH HÀNG NGÀY</h2>
+                <div class="card-subtext">Nhận thưởng liên tục 7 ngày</div>
+              </div>
+            </div>
+
+            <!-- Golden Treasure Chest Illustration (3D Open Wooden & Gold Chest) -->
+            <div class="chest-icon-wrapper">
+              <svg viewBox="0 0 54 48" class="chest-svg">
+                <defs>
+                  <linearGradient id="chest-wood-grad" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stop-color="#A16207" />
+                    <stop offset="50%" stop-color="#78350F" />
+                    <stop offset="100%" stop-color="#451A03" />
+                  </linearGradient>
+                  <linearGradient id="chest-gold-trim" x1="0" y1="0" x2="1" y2="1">
+                    <stop offset="0%" stop-color="#FFE77A" />
+                    <stop offset="60%" stop-color="#FFC928" />
+                    <stop offset="100%" stop-color="#D18B12" />
+                  </linearGradient>
+                </defs>
+                <!-- Chest Base Body -->
+                <path d="M6,22 L48,22 L44,42 L10,42 Z" fill="url(#chest-wood-grad)" stroke="#D18B12" stroke-width="1.2" />
+                <!-- Gold Corner Straps -->
+                <rect x="9" y="22" width="4" height="20" fill="url(#chest-gold-trim)" />
+                <rect x="41" y="22" width="4" height="20" fill="url(#chest-gold-trim)" />
+                <rect x="25" y="22" width="4" height="20" fill="url(#chest-gold-trim)" />
+                <!-- Lock Plate -->
+                <circle cx="27" cy="27" r="3.5" fill="#FFE77A" stroke="#78350F" stroke-width="1" />
+                <rect x="26.2" y="27" width="1.6" height="3" fill="#451A03" />
+                <!-- Open Lid Tilted Back -->
+                <path d="M4,20 L50,20 L46,8 L8,8 Z" fill="url(#chest-wood-grad)" stroke="#D18B12" stroke-width="1.2" />
+                <path d="M8,8 Q27,2 46,8" stroke="url(#chest-gold-trim)" stroke-width="3" fill="none" />
+                <!-- Internal Gold Radiance -->
+                <ellipse cx="27" cy="20" rx="18" ry="5" fill="#FFE77A" opacity="0.85" />
+                <!-- Overflowing Coins -->
+                <circle cx="20" cy="18" r="3.5" fill="#FFC928" stroke="#FFE77A" stroke-width="0.8" />
+                <circle cx="27" cy="16" r="4" fill="#FFE77A" stroke="#D18B12" stroke-width="0.8" />
+                <circle cx="34" cy="18" r="3.5" fill="#FFC928" stroke="#FFE77A" stroke-width="0.8" />
+                <circle cx="23" cy="14" r="3" fill="#FFC928" />
+                <circle cx="31" cy="14" r="3" fill="#FFE77A" />
+                <!-- Gemstones (Ruby & Cyan Diamond) -->
+                <polygon points="15,19 18,16 21,19 18,22" fill="#EF4444" stroke="#FFE77A" stroke-width="0.5" />
+                <polygon points="36,19 39,16 42,19 39,22" fill="#22C8E5" stroke="#FFFFFF" stroke-width="0.5" />
+                <!-- Sparkle Stars -->
+                <polygon points="27,6 28,9 31,10 28,11 27,14 26,11 23,10 26,9" fill="#FFFFFF" />
+                <polygon points="14,10 14.5,12 16.5,12.5 14.5,13 14,15 13.5,13 11.5,12.5 13.5,12" fill="#FFE77A" />
+              </svg>
+            </div>
+          </div>
+
+          <!-- 7-Day Matrix -->
+          <div class="checkin-days-matrix">
+            <!-- Day 1 (Claimed) -->
+            <div class="day-slot upcoming" data-day="1">
+              <span class="day-label">Ngày 1</span>
+              <div class="day-icon-circle">
+                <svg viewBox="0 0 24 24" fill="currentColor" class="day-coin"><circle cx="12" cy="12" r="9" fill="#FFC928"/><circle cx="12" cy="12" r="6" fill="#FFE77A"/></svg>
+              </div>
+              <span class="day-reward">100 Xu</span>
+            </div>
+
+            <!-- Day 2 -->
+            <div class="day-slot upcoming" data-day="2">
+              <span class="day-label">Ngày 2</span>
+              <div class="day-icon-circle">
+                <svg viewBox="0 0 24 24" fill="currentColor" class="day-coin">
+                  <circle cx="12" cy="12" r="9" fill="#FFC928"/>
+                  <circle cx="12" cy="12" r="6" fill="#FFE77A"/>
+                </svg>
+              </div>
+              <span class="day-reward">100 Xu</span>
+            </div>
+
+            <!-- Day 3 -->
+            <div class="day-slot upcoming" data-day="3">
+              <span class="day-label">Ngày 3</span>
+              <div class="day-icon-circle">
+                <svg viewBox="0 0 24 24" fill="currentColor" class="day-coin">
+                  <circle cx="12" cy="12" r="9" fill="#FFC928"/>
+                  <circle cx="12" cy="12" r="6" fill="#FFE77A"/>
+                </svg>
+              </div>
+              <span class="day-reward">100 Xu</span>
+            </div>
+
+            <!-- Day 4 -->
+            <div class="day-slot upcoming" data-day="4">
+              <span class="day-label">Ngày 4</span>
+              <div class="day-icon-circle">
+                <svg viewBox="0 0 24 24" fill="currentColor" class="day-coin">
+                  <circle cx="12" cy="12" r="9" fill="#FFC928"/>
+                  <circle cx="12" cy="12" r="6" fill="#FFE77A"/>
+                </svg>
+              </div>
+              <span class="day-reward">100 Xu</span>
+            </div>
+
+            <!-- Day 5 -->
+            <div class="day-slot upcoming" data-day="5">
+              <span class="day-label">Ngày 5</span>
+              <div class="day-icon-circle">
+                <svg viewBox="0 0 24 24" fill="currentColor" class="day-coin">
+                  <circle cx="12" cy="12" r="9" fill="#FFC928"/>
+                  <circle cx="12" cy="12" r="6" fill="#FFE77A"/>
+                </svg>
+              </div>
+              <span class="day-reward">100 Xu</span>
+            </div>
+
+            <!-- Day 6 -->
+            <div class="day-slot upcoming" data-day="6">
+              <span class="day-label">Ngày 6</span>
+              <div class="day-icon-circle">
+                <svg viewBox="0 0 24 24" fill="currentColor" class="day-coin">
+                  <circle cx="12" cy="12" r="9" fill="#FFC928"/>
+                  <circle cx="12" cy="12" r="6" fill="#FFE77A"/>
+                </svg>
+              </div>
+              <span class="day-reward">100 Xu</span>
+            </div>
+
+            <!-- Day 7 (Grand Prize, Crown) -->
+            <div class="day-slot day-grand-prize" data-day="7">
+              <span class="day-label">Ngày 7</span>
+              <div class="day-icon-circle crown-slot">
+                <svg viewBox="0 0 24 24" fill="#FFC928" class="crown-icon">
+                  <path d="M5 16L3 5l5.5 5L12 4l3.5 6L21 5l-2 11H5zm14 3c0 .6-.4 1-1 1H6c-.6 0-1-.4-1-1v-1h14v1z"/>
+                </svg>
+              </div>
+              <span class="day-reward gold-highlight">200 Xu</span>
+            </div>
+          </div>
+
+          <button type="button" class="btn btn-checkin-action" id="btn-claim-checkin" disabled>
+            <span class="btn-checkin-text" id="btn-checkin-label">Đăng nhập để điểm danh</span>
+          </button>
+
+          <!-- Streak Info Pills (Matching anhmau.png) -->
+          <div class="checkin-stats-row">
+            <div class="streak-pill">
+              <span class="pill-icon">🔥</span>
+              <span class="pill-text">Chuỗi hiện tại: <strong id="streak-count">—</strong></span>
+            </div>
+            <div class="streak-pill">
+              <span class="pill-icon">🔄</span>
+              <span class="pill-text">Chu kỳ: <strong>7 ngày</strong></span>
+            </div>
+          </div>
+
+          <div class="total-cycle-banner">
+            <span class="banner-icon">🎁</span>
+            <span class="banner-text">Tổng thưởng chu kỳ: <strong>800 Xu</strong></span>
+          </div>
+        </div>
+
+        <!-- Community Tasks Section -->
+        <div class="community-tasks-section">
+          <div class="section-title-bar">
+            <div class="title-with-icon">
+              <div class="community-icon-box">
+                <svg viewBox="0 0 24 24" fill="#FFC928">
+                  <path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/>
+                </svg>
+              </div>
+              <div>
+                <h2 class="section-heading">NHIỆM VỤ CỘNG ĐỒNG</h2>
+                <div class="section-subtext">Liên kết Group và Channel chưa được cấu hình</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Task 1: Telegram Group (Matching anhmau.png layout) -->
+          <div class="card task-card" id="task-group">
+            <div class="task-top-row">
+              <div class="task-left">
+                <div class="telegram-circle-icon">
+                  <svg viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 00-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.12-.31-1.08-.66.02-.18.27-.36.74-.55 2.92-1.27 4.86-2.11 5.83-2.51 2.78-1.16 3.35-1.36 3.73-1.36.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .38z"/>
+                  </svg>
+                </div>
+                <div class="task-details">
+                  <h3 class="task-title">Tham gia Group Telegram</h3>
+                  <p class="task-desc">Tham gia và xác minh để nhận thưởng</p>
+                </div>
+              </div>
+              <button type="button" class="btn btn-outline-join" id="btn-join-group" disabled>
+                <span>Chưa cấu hình</span>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="external-icon">
+                  <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+                  <polyline points="15 3 21 3 21 9"/>
+                  <line x1="10" y1="14" x2="21" y2="3"/>
+                </svg>
+              </button>
+            </div>
+            <!-- Full Width Verify Button -->
+            <button type="button" class="btn btn-verify-full" id="btn-verify-group">
+              <span>✓ Xác minh</span>
+            </button>
+          </div>
+
+          <!-- Task 2: Telegram Channel -->
+          <div class="card task-card" id="task-channel">
+            <div class="task-top-row">
+              <div class="task-left">
+                <div class="telegram-circle-icon">
+                  <svg viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 00-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.12-.31-1.08-.66.02-.18.27-.36.74-.55 2.92-1.27 4.86-2.11 5.83-2.51 2.78-1.16 3.35-1.36 3.73-1.36.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .38z"/>
+                  </svg>
+                </div>
+                <div class="task-details">
+                  <h3 class="task-title">Theo dõi Channel Telegram</h3>
+                  <p class="task-desc">Theo dõi và xác minh để nhận thưởng</p>
+                </div>
+              </div>
+              <button type="button" class="btn btn-outline-join" id="btn-join-channel" disabled>
+                <span>Chưa cấu hình</span>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="external-icon">
+                  <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+                  <polyline points="15 3 21 3 21 9"/>
+                  <line x1="10" y1="14" x2="21" y2="3"/>
+                </svg>
+              </button>
+            </div>
+            <!-- Full Width Verify Button -->
+            <button type="button" class="btn btn-verify-full" id="btn-verify-channel">
+              <span>✓ Xác minh</span>
+            </button>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- ========================================== -->
+      <!-- TAB 4: REFERRAL (GIỚI THIỆU)                -->
+      <!-- ========================================== -->
+      <section id="tab-referral" class="tab-pane" role="tabpanel" aria-labelledby="nav-btn-referral" aria-label="Giới thiệu bạn bè">
+        
+        <!-- Header Hero Card (Matching anhmau.png) -->
+        <div class="card referral-hero-card">
+          <div class="referral-hero-content">
+            <div class="ref-hero-icon-box">
+              <svg viewBox="0 0 24 24" fill="#FFC928">
+                <path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/>
+              </svg>
+            </div>
+            <div class="ref-hero-text">
+              <h2 class="card-heading">GIỚI THIỆU BẠN BÈ</h2>
+              <div class="card-subtext">Hoa hồng 10% từ Xu đào của F1 đủ điều kiện</div>
+            </div>
+            <!-- Growth / Coins Graphic -->
+            <div class="ref-hero-coins">
+              <svg viewBox="0 0 32 32" width="32" height="32">
+                <polygon points="16,2 30,16 22,16 22,30 10,30 10,16 2,16" fill="#FFC928" />
+              </svg>
+            </div>
+          </div>
+
+          <!-- Referral Link Box -->
+          <div class="referral-link-container">
+              <label class="ref-input-label" for="ref-link-input">Link giới thiệu</label>
+            <div class="ref-link-row">
+               <input type="text" class="ref-link-input" id="ref-link-input" readonly aria-label="Link giới thiệu" value="">
+              <button type="button" class="btn-copy-icon" id="btn-quick-copy" title="Sao chép nhanh">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+                  <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <!-- Action Buttons (Matching anhmau.png: Green "Sao chép" & Blue "Chia sẻ Telegram") -->
+          <div class="ref-buttons-grid">
+            <button type="button" class="btn btn-copy-primary" id="btn-copy-ref">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="btn-svg">
+                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+              </svg>
+              <span>Sao chép link</span>
+            </button>
+            <button type="button" class="btn btn-share-telegram" id="btn-share-ref">
+              <svg viewBox="0 0 24 24" fill="currentColor" class="btn-svg">
+                <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
+              </svg>
+              <span>Chia sẻ link</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- 4 Statistics Cards Grid (2x2) -->
+        <div class="ref-stats-grid">
+          <div class="card stat-card">
+            <div class="stat-card-header">
+              <span class="stat-title">Tổng F1</span>
+              <div class="stat-icon-wrapper user-icon-wrap">
+                <svg viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                </svg>
+              </div>
+            </div>
+            <div class="stat-number" id="ref-total-f1">—</div>
+          </div>
+
+          <div class="card stat-card">
+            <div class="stat-card-header">
+              <span class="stat-title">F1 đạt điều kiện</span>
+              <div class="stat-icon-wrapper check-icon-wrap">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                  <polyline points="20 6 9 17 4 12"/>
+                </svg>
+              </div>
+            </div>
+            <div class="stat-number highlight-lime" id="ref-qualified-f1">—</div>
+          </div>
+
+          <div class="card stat-card">
+            <div class="stat-card-header">
+              <span class="stat-title">Xu hoa hồng</span>
+              <div class="stat-icon-wrapper coin-icon-wrap">
+                <svg viewBox="0 0 24 24" fill="currentColor">
+                  <circle cx="12" cy="12" r="10" fill="#FFC928"/>
+                  <circle cx="12" cy="12" r="7" fill="#FFE77A"/>
+                </svg>
+              </div>
+            </div>
+            <div class="stat-number gold-highlight" id="ref-commission-val">—</div>
+          </div>
+
+          <div class="card stat-card">
+            <div class="stat-card-header">
+              <span class="stat-title">Tỷ lệ hoa hồng</span>
+              <div class="stat-icon-wrapper percent-icon-wrap">
+                <svg viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M7.5 4C5.57 4 4 5.57 4 7.5S5.57 11 7.5 11 11 9.43 11 7.5 9.43 4 7.5 4zm0 5c-.83 0-1.5-.67-1.5-1.5S6.67 6 7.5 6s1.5.67 1.5 1.5S8.33 9 7.5 9zm9 6c-1.93 0-3.5 1.57-3.5 3.5s1.57 3.5 3.5 3.5 3.5-1.57 3.5-3.5-1.57-3.5-3.5-3.5zm0 5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm3.21-15.71a.996.996 0 00-1.41 0L4.29 18.29a.996.996 0 101.41 1.41L19.71 5.71c.39-.39.39-1.02 0-1.42z"/>
+                </svg>
+              </div>
+            </div>
+            <div class="stat-number highlight-orange">10%</div>
+          </div>
+        </div>
+
+        <!-- F1 Referrals List -->
+        <div class="ref-list-section">
+          <div class="section-title-bar">
+            <h3 class="section-heading" id="ref-f1-heading">Danh sách F1</h3>
+          </div>
+
+          <div class="f1-user-list" id="f1-user-list-container"></div>
+        </div>
+
+      </section>
+
+      <!-- ========================================== -->
+      <!-- TAB 5: WALLET (VÍ CỦA BẠN)                   -->
+      <!-- ========================================== -->
+      <section id="tab-wallet" class="tab-pane" role="tabpanel" aria-labelledby="nav-btn-wallet" aria-label="Ví và rút tiền">
+        
+        <!-- Header: Wallet Icon & Title (Matching anhmau.png) -->
+        <div class="wallet-top-header">
+          <div class="wallet-top-left">
+            <div class="wallet-cyan-icon-box">
+              <svg viewBox="0 0 24 24" fill="currentColor">
+                <path d="M21 18v1c0 1.1-.9 2-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14c1.1 0 2 .9 2 2v1h-9a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h9zm-9-2h10V8H12v8zm4-2.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/>
+              </svg>
+            </div>
+            <div>
+              <h2 class="wallet-main-title">VÍ CỦA BẠN</h2>
+              <div class="wallet-main-sub">Số dư và rút tiền</div>
+            </div>
+          </div>
+
+          <!-- 3D Gold Coins Stack Graphic (Luminous Beveled Coins) -->
+          <div class="coins-stack-graphic">
+            <svg viewBox="0 0 64 42" class="coins-svg">
+              <defs>
+                <linearGradient id="coin-side-grad" x1="0" y1="0" x2="1" y2="0">
+                  <stop offset="0%" stop-color="#D18B12" />
+                  <stop offset="50%" stop-color="#FFC928" />
+                  <stop offset="100%" stop-color="#92400E" />
+                </linearGradient>
+                <linearGradient id="coin-face-grad" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0%" stop-color="#FFFDE7" />
+                  <stop offset="40%" stop-color="#FFE77A" />
+                  <stop offset="80%" stop-color="#FFC928" />
+                  <stop offset="100%" stop-color="#D18B12" />
+                </linearGradient>
+              </defs>
+              <!-- Base Shadow -->
+              <ellipse cx="32" cy="38" rx="28" ry="4" fill="#0D1B26" opacity="0.6" />
+              <!-- Left Stack: 3 Coins -->
+              <rect x="8" y="28" width="28" height="6" rx="2" fill="url(#coin-side-grad)" />
+              <ellipse cx="22" cy="28" rx="14" ry="4" fill="url(#coin-face-grad)" stroke="#D18B12" stroke-width="0.8" />
+              <rect x="8" y="22" width="28" height="6" rx="2" fill="url(#coin-side-grad)" />
+              <ellipse cx="22" cy="22" rx="14" ry="4" fill="url(#coin-face-grad)" stroke="#D18B12" stroke-width="0.8" />
+              <rect x="8" y="16" width="28" height="6" rx="2" fill="url(#coin-side-grad)" />
+              <ellipse cx="22" cy="16" rx="14" ry="4" fill="url(#coin-face-grad)" stroke="#D18B12" stroke-width="0.8" />
+              <circle cx="22" cy="16" r="3.5" fill="none" stroke="#D18B12" stroke-width="0.8" />
+
+              <!-- Right Stack: 3 Coins (Taller) -->
+              <rect x="30" y="26" width="28" height="6" rx="2" fill="url(#coin-side-grad)" />
+              <ellipse cx="44" cy="26" rx="14" ry="4" fill="url(#coin-face-grad)" stroke="#D18B12" stroke-width="0.8" />
+              <rect x="30" y="20" width="28" height="6" rx="2" fill="url(#coin-side-grad)" />
+              <ellipse cx="44" cy="20" rx="14" ry="4" fill="url(#coin-face-grad)" stroke="#D18B12" stroke-width="0.8" />
+              <rect x="30" y="14" width="28" height="6" rx="2" fill="url(#coin-side-grad)" />
+              <ellipse cx="44" cy="14" rx="14" ry="4" fill="url(#coin-face-grad)" stroke="#D18B12" stroke-width="0.8" />
+              <circle cx="44" cy="14" r="3.5" fill="none" stroke="#D18B12" stroke-width="0.8" />
+
+              <!-- Front Angled Leaning Coin -->
+              <ellipse cx="32" cy="28" rx="8" ry="12" fill="url(#coin-face-grad)" stroke="#D18B12" stroke-width="1" transform="rotate(-15 32 28)" />
+              <!-- Specular Glint -->
+              <polygon points="44,8 45,10 47,11 45,12 44,14 43,12 41,11 43,10" fill="#FFFFFF" />
+            </svg>
+          </div>
+        </div>
+
+        <div class="integration-notice" role="status">
+          <strong>Rút tiền chưa khả dụng.</strong>
+          <span>Chế độ thử nghiệm: Xu chỉ là điểm. Quảng cáo và đổi/rút tiền đang tắt; không nhập thông tin thanh toán.</span>
+        </div>
+
+        <!-- Big Balance Hero Card (GOLD digits matching anhmau.png) -->
+        <div class="card wallet-balance-card">
+          <div class="wallet-balance-center">
+            <!-- Large Gold Digits -->
+            <div class="balance-primary-amount gold-highlight" id="wallet-available-xu">— Xu</div>
+            <div class="balance-vnd-conversion">
+              <span class="vnd-symbol">≈</span>
+              <span class="vnd-val" id="wallet-converted-vnd">Chưa bật</span>
+            </div>
+            <div class="rate-badge">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="clock-icon">
+                <circle cx="12" cy="12" r="10"/>
+                <polyline points="12 6 12 12 16 14"/>
+              </svg>
+              <span>Quy đổi và rút tiền đang tắt</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Wallet Two Subnav Tabs: Rút tiền | Lịch sử (Matching anhmau.png) -->
+        <div class="wallet-subnav">
+          <button type="button" class="subnav-tab active" data-subtab="withdraw-form" id="tab-btn-withdraw" aria-pressed="true">
+            <span>Rút tiền</span>
+          </button>
+          <button type="button" class="subnav-tab" data-subtab="withdraw-history" id="tab-btn-history" aria-pressed="false">
+            <span>Lịch sử</span>
+          </button>
+        </div>
+
+        <!-- SUB-TAB 1: WITHDRAWAL FORM -->
+        <div class="subtab-content active" id="subtab-withdraw-form">
+          <div class="card withdraw-form-card">
+            <div class="form-title-bar">
+              <h3 class="form-heading">Tạo lệnh rút tiền</h3>
+            </div>
+
+            <!-- Payment Method Selector (MoMo, Ngân hàng, ZaloPay) -->
+            <div class="form-group">
+              <div class="payment-methods-grid">
+                <!-- MoMo -->
+                <button type="button" class="payment-method-pill active" data-method="momo" aria-pressed="true" disabled>
+                  <span class="payment-logo-badge momo-badge">88 MoMo</span>
+                </button>
+                <!-- Ngân Hàng -->
+                <button type="button" class="payment-method-pill" data-method="bank" aria-pressed="false" disabled>
+                  <span class="payment-logo-badge bank-badge">
+                    <svg viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M4 10h3v7H4zm6 0h3v7h-3zm6 0h3v7h-3zM2 22h19v-3H2zm9-20L2 6v2h19V6z"/>
+                    </svg>
+                    <span>Ngân hàng</span>
+                  </span>
+                </button>
+                <!-- ZaloPay -->
+                <button type="button" class="payment-method-pill" data-method="zalopay" aria-pressed="false" disabled>
+                  <span class="payment-logo-badge zalopay-badge">ZaloPay</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Dynamic Bank Selection Field (Only shown when 'bank' selected) -->
+            <div class="form-group bank-only-field" id="bank-select-group" hidden>
+              <label class="form-label" for="withdraw-bank-name">Chọn ngân hàng</label>
+              <select id="withdraw-bank-name" class="form-input form-select" disabled>
+                <option value="MB" selected>MB Bank (Ngân hàng Quân Đội)</option>
+                <option value="VCB">Vietcombank (Ngoại thương)</option>
+                <option value="TCB">Techcombank (Kỹ Thương)</option>
+                <option value="ACB">ACB (Á Châu)</option>
+                <option value="VPB">VPBank (Việt Nam Thịnh Vượng)</option>
+                <option value="TPB">TPBank (Tiên Phong)</option>
+                <option value="ICB">VietinBank (Công Thương)</option>
+                <option value="BIDV">BIDV (Đầu tư và Phát triển)</option>
+              </select>
+            </div>
+
+            <!-- Account Number / Phone Field -->
+            <div class="form-group">
+              <label class="form-label" id="label-account-num" for="withdraw-account-num">Số tài khoản ví MoMo</label>
+              <div class="input-with-icon">
+                <div class="input-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                    <circle cx="12" cy="7" r="4"/>
+                  </svg>
+                </div>
+                <input type="text" id="withdraw-account-num" class="form-input" placeholder="Chưa khả dụng" autocomplete="off" disabled>
+              </div>
+            </div>
+
+            <!-- Account Holder Name -->
+            <div class="form-group">
+              <label class="form-label" id="label-account-name" for="withdraw-account-name">Họ và tên chủ ví</label>
+              <div class="input-with-icon">
+                <div class="input-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                    <circle cx="8.5" cy="7" r="4"/>
+                    <polyline points="17 11 19 13 23 9"/>
+                  </svg>
+                </div>
+                <input type="text" id="withdraw-account-name" class="form-input uppercase" placeholder="Chưa khả dụng" autocomplete="off" disabled>
+              </div>
+            </div>
+
+            <!-- Amount in VND -->
+            <div class="form-group">
+              <div class="form-label-row">
+                <label class="form-label" for="withdraw-amount-vnd">Số tiền (VND)</label>
+              </div>
+              <div class="input-with-icon">
+                <div class="input-icon currency-tag">
+                  <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
+                    <circle cx="12" cy="12" r="9" fill="#FFC928"/>
+                    <circle cx="12" cy="12" r="6" fill="#FFE77A"/>
+                  </svg>
+                </div>
+                <input type="number" id="withdraw-amount-vnd" class="form-input font-numeric" placeholder="Chưa khả dụng" min="2000" max="10000" step="1000" disabled>
+                <div class="input-right-action" id="helper-xu-required">Chưa bật</div>
+              </div>
+
+              <!-- Quick Amount Preset Chips -->
+              <div class="preset-chips-row">
+              <button type="button" class="preset-chip active" data-amount="2000" disabled>2.000 đ</button>
+              <button type="button" class="preset-chip" data-amount="5000" disabled>5.000 đ</button>
+              <button type="button" class="preset-chip" data-amount="10000" disabled>10.000 đ</button>
+              </div>
+            </div>
+
+            <!-- Mock withdrawal rules; values remain non-binding until confirmed -->
+            <div class="withdraw-rules-box">
+              <div class="rule-line check-pass">
+                <span class="icon-check">✓</span>
+                <span>Chức năng thanh toán đang tắt ở chế độ thử nghiệm.</span>
+              </div>
+              <div class="rule-line check-info">
+                <span class="icon-info">ℹ</span>
+                <span>Tỷ lệ, hạn mức và bước rút chưa được phê duyệt.</span>
+              </div>
+            </div>
+
+            <!-- Disabled until an approved backend withdrawal flow is available -->
+            <button type="button" class="btn btn-primary btn-submit-withdraw" id="btn-submit-withdraw" disabled aria-describedby="withdrawal-unavailable-note">
+              <svg viewBox="0 0 24 24" fill="currentColor" class="btn-svg">
+                <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
+              </svg>
+              <span>Rút tiền chưa khả dụng</span>
+            </button>
+            <p class="withdrawal-unavailable-note" id="withdrawal-unavailable-note">Khi hệ thống được tích hợp, trạng thái duyệt và trạng thái thanh toán sẽ được theo dõi riêng.</p>
+          </div>
+        </div>
+
+        <!-- SUB-TAB 2: WITHDRAWAL HISTORY -->
+        <div class="subtab-content" id="subtab-withdraw-history" hidden>
+          <div class="card history-card">
+            <div class="history-header">
+              <h3 class="history-title">Lịch sử rút tiền</h3>
+              <span class="sub-counter" id="withdraw-count-label">0 bản ghi</span>
+            </div>
+
+            <div class="history-list" id="withdraw-history-list"></div>
+          </div>
+        </div>
+
+      </section>
+
+    </main>
+
+    <!-- Bottom Fixed Navigation Bar (5 Main Tabs matching anhmau.png) -->
+    <nav class="bottom-nav" id="bottom-navigation" aria-label="Điều hướng chính">
+      <!-- Tab 1: Mining -->
+      <button type="button" class="nav-item active" data-tab="tab-mining" id="nav-btn-mining" aria-controls="tab-mining" aria-current="page">
+        <div class="nav-icon-wrapper">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+            <path d="M14 2l4 4L7 17H3v-4L14 2z"/>
+            <path d="M3 22l6-6"/>
+            <path d="M21 9l-6-6"/>
+          </svg>
+        </div>
+        <span class="nav-label">Đào</span>
+      </button>
+
+      <!-- Tab 2: Upgrade -->
+      <button type="button" class="nav-item" data-tab="tab-upgrade" id="nav-btn-upgrade" aria-controls="tab-upgrade">
+        <div class="nav-icon-wrapper">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+            <polyline points="9 22 9 12 15 12 15 22"/>
+          </svg>
+        </div>
+        <span class="nav-label">Nâng cấp</span>
+      </button>
+
+      <!-- Tab 3: Check-in -->
+      <button type="button" class="nav-item" data-tab="tab-checkin" id="nav-btn-checkin" aria-controls="tab-checkin">
+        <div class="nav-icon-wrapper">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+            <line x1="16" y1="2" x2="16" y2="6"/>
+            <line x1="8" y1="2" x2="8" y2="6"/>
+            <line x1="3" y1="10" x2="21" y2="10"/>
+            <path d="M9 16l2 2 4-4"/>
+          </svg>
+        </div>
+        <span class="nav-label">Điểm danh</span>
+      </button>
+
+      <!-- Tab 4: Referral -->
+      <button type="button" class="nav-item" data-tab="tab-referral" id="nav-btn-referral" aria-controls="tab-referral">
+        <div class="nav-icon-wrapper">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+            <circle cx="9" cy="7" r="4"/>
+            <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+            <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+          </svg>
+        </div>
+        <span class="nav-label">Giới thiệu</span>
+      </button>
+
+      <!-- Tab 5: Wallet -->
+      <button type="button" class="nav-item" data-tab="tab-wallet" id="nav-btn-wallet" aria-controls="tab-wallet">
+        <div class="nav-icon-wrapper">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+            <rect x="2" y="5" width="20" height="14" rx="2"/>
+            <line x1="2" y1="10" x2="22" y2="10"/>
+          </svg>
+        </div>
+        <span class="nav-label">Ví</span>
+      </button>
+    </nav>
+
+    <!-- ========================================== -->
+    <!-- MODALS & OVERLAYS                          -->
+    <!-- ========================================== -->
+    
+    <!-- Level Detail Modal Sheet -->
+    <div class="modal-backdrop" id="level-modal-backdrop" style="display: none;" aria-hidden="true">
+      <div class="modal-sheet" id="level-modal" role="dialog" aria-modal="true" aria-labelledby="modal-level-title" tabindex="-1">
+        <div class="modal-drag-handle"></div>
+        <div class="modal-header">
+          <h3 class="modal-title" id="modal-level-title">Chi tiết Máy Đào Level 5</h3>
+          <button type="button" class="btn-close-modal" id="btn-close-level-modal" aria-label="Đóng chi tiết cấp độ">✕</button>
+        </div>
+        <div class="modal-body" id="modal-level-body"></div>
+      </div>
+    </div>
+
+    <!-- Toast Notification Container -->
+    <div class="toast-container" id="toast-container" aria-live="polite"></div>
+
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
